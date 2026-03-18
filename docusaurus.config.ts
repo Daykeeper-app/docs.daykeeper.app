@@ -4,6 +4,7 @@ import type * as Preset from "@docusaurus/preset-classic"
 
 const config: Config = {
   title: "DAYKEEPER",
+  favicon: "img/DaykeeperLogo.svg",
 
   url: "https://docs.daykeeper.net",
   // Set the /<baseUrl>/ pathname under which your site is served
@@ -35,9 +36,13 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: "img/DK_logo.jpg",
+    image: "img/DaykeeperLogo.svg",
     navbar: {
       title: "DayKeeper",
+      logo: {
+        alt: "DayKeeper Logo",
+        src: "img/DaykeeperLogo.svg",
+      },
       items: [
         {
           type: "docSidebar",
