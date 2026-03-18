@@ -6,83 +6,48 @@ sidebar_position: 10
 
 ### <span style={{color: 'darkgreen'}}>GET</span> `/follow_requests`
 
-#### Description:
+#### Description
 
-This function allows you to get all the pending follow requests that your account has received.
+Returns a paginated list of pending follow requests received by the authenticated user.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'green'}}>true</span>
 
+#### QUERY PARAMS
+
+| Name          | Type     | Required | Description |
+| ------------- | -------- | -------- | ----------- |
+| `page`        | `number` | No       | Page number. Default is `1`. |
+| `maxPageSize` | `number` | No       | Page size. Maximum is `20`. |
+
 ## Usage Example
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
 ```javascript
-const response = await axios.get("https://daykeeper.life/follow_requests")
+await axios.get("https://api.daykeeper.app/follow_requests", {
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+  },
+})
 ```
 
 ### Success Response
 
-| Name          | Type     | Description                                                       |
-| ------------- | -------- | ----------------------------------------------------------------- |
-| `Status`      | `code`   | Response Status Code                                              |
-| `Message`     | `string` | Descriptive message                                               |
-| `data`        | `array`  | Array of objects that contain the users information               |
-| `page`        | `number` | The current page                                                  |
-| `pageSize`    | `number` | The quantity of objects returned in thois page                    |
-| `maxPageSize` | `number` | The maximun number of objects that a page can return (max: `100`) |
-| `totalPages`  | `number` | The total number of pages                                         |
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-    "message": "followers fetched successfully",
-    "data": [
-        {
-            "_id": "65cbaab84b9d1cce41e98b60",
-            "name": "Luciano",
-            "email": "lucianomenezes655@gmail.com",
-            "profile_picture": {
-                "name": "imagem_2024-04-06_185517723.png",
-                "key": "c5d4d49f80d4e9ee7ef551dfb019fe1b-imagem_2024-04-06_185517723.png",
-                "url": "https://daykeeper.s3.amazonaws.com/c5d4d49f80d4e9ee7ef551dfb019fe1b-imagem_2024-04-06_185517723.png"
-            },
-            "private": false,
-            "__v": 2,
-            "bio": "Essa é a minha bio, a bio do Luciano",
-            "created_at": "2024-02-13T17:45:28.803Z",
-            "timeZone": "America/Recife"
-        }
-    ],
-    "page": 1,
-    "pageSize": 1,
-    "maxPageSize": 1,
-    "totalPages": 1
+  "message": "Follow Requests fetched successfully",
+  "data": [],
+  "page": 1,
+  "pageSize": 0,
+  "maxPageSize": 20,
+  "totalPages": 0,
+  "totalCount": 0
 }
 ```
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 409
-{
-    "message": "Invalid Login"
-}
-```
-
-#### Possible errors:
-
-| Code | Description   |
-| ---- | ------------- |
-| 409  | Invalid Login |
-| 500  | Server Error  |
+| Code | Description |
+| ---- | ----------- |
+| 401  | Missing or invalid access token |
+| 500  | Server error |

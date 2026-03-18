@@ -6,9 +6,9 @@ sidebar_position: 3
 
 ### <span style={{color: 'darkblue'}}>PUT</span> `/reset_profile_picture`
 
-#### Description:
+#### Description
 
-This feature allows you to remove your profile picture, making your account have the default profile picture.
+Resets the authenticated user's profile picture back to the default DayKeeper profile image.
 
 ### Request Parameters
 
@@ -16,48 +16,30 @@ This feature allows you to remove your profile picture, making your account have
 
 ## Usage Example
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
 ```javascript
-const response = await axios.put("https://daykeeper.life/reset_profile_picture")
+await axios.put(
+  "https://api.daykeeper.app/reset_profile_picture",
+  {},
+  {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  }
+)
 ```
 
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-    "message": "JohnDoe's profile picture reseted successfully",
+  "message": "johndoe's profile picture reseted successfully"
 }
 ```
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 200
-{
-    "message": "User`s profile picture is already the default"
-}
-```
-
-#### Possible errors:
-
-| Code | Description                                                   |
-| ---- | ------------------------------------------------------------- |
-| 400  | Invalid information OR profile picture is already the default |
-| 409  | Invalid Login                                                 |
-| 500  | Server Error                                                  |
+| Code | Description |
+| ---- | ----------- |
+| 400  | Profile picture is already the default |
+| 401  | Missing or invalid access token |
+| 500  | Server error |

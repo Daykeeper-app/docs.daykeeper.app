@@ -4,70 +4,74 @@ sidebar_position: 2
 
 # Confirm Email
 
-### <span style={{color: 'green'}}>GET</span> `/auth/confirm_email`
+### <span style={{color: 'darkorange'}}>POST</span> `/auth/confirm_email`
 
-#### Description:
+#### Description
 
-This function allows you to confirm the email of a registered user.
+Confirms a newly registered account using the six-digit verification code sent by email. On success, the API also logs the user in and returns access and refresh tokens.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'darkred'}}>false</span>
 
-#### Body
+#### BODY
 
-| Name               | Type     | Required | Description                                        |
-| ------------------ | -------- | -------- | -------------------------------------------------- |
-| `email`            | `string` | Yes      | The account email                                  |
-| `verificationCode` | `number` | Yes      | 6-digit verification code sent to registered email |
+| Name               | Type     | Required | Description |
+| ------------------ | -------- | -------- | ----------- |
+| `email`            | `string` | Yes      | Account email. |
+| `verificationCode` | `string` | Yes      | Six-digit email verification code. |
+| `deviceId`         | `string` | No       | Optional device identifier stored with the refresh token. |
 
 ## Usage Example
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
 ```javascript
-await axios.get("https://api.daykeeper.life/auth/confirm_email", {
+await axios.post("https://api.daykeeper.app/auth/confirm_email", {
   email: "johndoe@example.com",
   verificationCode: "123456",
+  deviceId: "iphone-15-pro",
 })
 ```
 
-- <span style={{color: '#8B8000'}}>Note:</span> if you get the code wrong, the right code will expire. To get another code, just try to log-in into the account and another code will be sent to your email.
-
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-  "message": "JohnDoe email confirmed successfully"
+  "message": "johndoe's email confirmed successfully",
+  "user": {
+    "id": "65cbaab84b9d1cce41e98b60",
+    "username": "johndoe",
+    "email": "johndoe@example.com",
+    "profile_picture": {
+      "title": "DaykeeperPFP.png",
+      "key": "public/DaykeeperPFP.png",
+      "url": ""
+    },
+    "roles": ["user"]
+  },
+  "accessToken": "<jwt>",
+  "refreshToken": "<refresh_token>"
 }
 ```
+
+### Notes
+
+- If the email is already confirmed, the API still returns success and issues tokens.
+- If the wrong code is sent, the stored verification code is cleared and a new one must be requested.
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
+| Code | Description |
+| ---- | ----------- |
+| 400  | Missing email or code |
+| 401  | Invalid verification code |
+| 403  | Expired code or unavailable account |
+| 404  | User not found |
+| 500  | Server error |
 
-#### Example:
+#### Example
 
-```javascript
-Status Code: 400
+```json
 {
-  "message": "Verification code expired or invalid"
+  "message": "Enter a valid Verification code"
 }
 ```
-
-#### Possible errors:
-
-| Code | Description         |
-| ---- | ------------------- |
-| 400  | Invalid information |

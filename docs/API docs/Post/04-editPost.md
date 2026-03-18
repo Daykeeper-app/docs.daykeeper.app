@@ -4,95 +4,61 @@ sidebar_position: 4
 
 # Edit Post
 
-### <span style={{color: 'darkblue'}}>PUT</span> `/:title`
+### <span style={{color: 'darkblue'}}>PUT</span> `/post/:postId`
 
-#### Description:
+#### Description
 
-This function allows you to edit one of your posts. <strong>You can only edit one time</strong>
+Updates a post owned by the authenticated user. You can change text, privacy, emotion, and attached media.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'green'}}>true</span>
 
-#### URL
+#### PATH PARAMS
 
-| Name    | Type     | Required | Description                 |
-| ------- | -------- | -------- | --------------------------- |
-| `title` | `string` | Yes      | The post title (dd-MM-yyyy) |
+| Name     | Type     | Required | Description |
+| -------- | -------- | -------- | ----------- |
+| `postId` | `string` | Yes      | MongoDB post ID. |
 
-#### Body (form-data)
+#### BODY (`multipart/form-data`)
 
-| Name         | Type     | Required | Description                                                           |
-| ------------ | -------- | -------- | --------------------------------------------------------------------- |
-| `data`       | `string` | No       | The new text for the post                                             |
-| `files`      | `file`   | No       | The new files for the post (max `5` with previous files)              |
-| `keep_files` | `string` | No       | A string like `012...files.length` that says the files that will stay |
+| Name           | Type       | Required | Description |
+| -------------- | ---------- | -------- | ----------- |
+| `data`         | `string`   | No       | New post text. |
+| `privacy`      | `string`   | No       | `public`, `private`, `close friends`, or `close_friends`. |
+| `emotion`      | `number`   | No       | Integer from `0` to `100`. |
+| `files`        | `file[]`   | No       | New media to add, up to the route upload limit. |
+| `keepMediaIds` | `string[]` | No       | IDs of media that should remain attached to the post. |
 
 ## Usage Example
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
 ```javascript
 const formData = new FormData()
+formData.append("data", "Edited text")
+formData.append("keepMediaIds", JSON.stringify(["66ca560de464036ce909f08b"]))
 
-formData.append("data", "My first post here")
-
-// one file
-formData.append("files", file)
-
-// Multiple files
-for (let file in filesArray) // max 5 (five) files
-  formData.append("files", file)
-
-formData.append("keep_files", "013") // keep the first, second and forty file, removing the third one
-
-const response = await axios.post(
-  "https://daykeeper.life/24-08-2024",
-  formData,
-  {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  }
-)
+await axios.put("https://api.daykeeper.app/post/66ca560de464036ce909f08a", formData, {
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "multipart/form-data",
+  },
+})
 ```
 
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-    "message": "post updated successfully"
+  "message": "post updated successfully"
 }
 ```
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 413
-{
-    "message": "This image violates DayKeeper's terms of service"
-}
-```
-
-#### Possible errors:
-
-| Code | Description                                         |
-| ---- | --------------------------------------------------- |
-| 400  | Invalid or innapropriate image / image limit exeded |
-| 409  | Invalid Login                                       |
-| 500  | Server Error                                        |
+| Code | Description |
+| ---- | ----------- |
+| 400  | Invalid data, privacy, or emotion |
+| 401  | Missing or invalid access token |
+| 404  | Post not found |
+| 413  | Text too long |
+| 500  | Server error |

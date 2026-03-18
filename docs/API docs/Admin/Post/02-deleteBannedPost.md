@@ -4,70 +4,45 @@ sidebar_position: 2
 
 # Delete Banned Post
 
-### <span style={{color: 'darkred'}}>DELETE</span> `/admin/:name/:posttitle`
+### <span style={{color: 'darkred'}}>DELETE</span> `/admin/post/:postId`
 
-#### Description:
+#### Description
 
-This function allows you permanently delete an banned post.
+Permanently deletes a banned post when the retention and admin-ownership rules are satisfied.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'green'}}>true</span>
 
-### URL
+#### Requires Admin Role: <span style={{color: 'green'}}>true</span>
 
-| Name        | Type     | Description                   |
-| ----------- | -------- | ----------------------------- |
-| `name`      | `string` | The username to be banned     |
-| `posttitle` | `string` | The post title (`DD-MM-YYYY`) |
+#### PATH PARAMS
 
-- <strong>Note: You can just delete a banned post is he is banned for 30 days AND you banned it before, you can change the amount of days at `constants/index.js`</strong>
+| Name     | Type     | Required | Description |
+| -------- | -------- | -------- | ----------- |
+| `postId` | `string` | Yes      | MongoDB post ID. |
 
-## Usage Example
+#### BODY
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
-```javascript
-await axios.delete("https://api.daykeeper.life/admin/JohnDoe/26-09-2024")
-```
+| Name      | Type     | Required | Description |
+| --------- | -------- | -------- | ----------- |
+| `message` | `string` | No       | Additional deletion message sent by email. |
 
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-- <strong>Note: An e-mail is going to be sent to the account</strong>
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-  "message": "JohnDoe's post from 25-08-2024 deleted successfully"
+  "message": "Post deleted successfully"
 }
 ```
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 409
-{
-  "message": "Invalid Login"
-}
-```
-
-#### Possible errors:
-
-| Code | Description   |
-| ---- | ------------- |
-| 409  | Invalid Login |
-| 500  | Server Error  |
+| Code | Description |
+| ---- | ----------- |
+| 401  | Missing or invalid access token |
+| 402  | User is not an admin |
+| 403  | Post is not banned or cannot be deleted yet |
+| 404  | Post or ban history not found |
+| 413  | Message too long |
+| 500  | Server error |

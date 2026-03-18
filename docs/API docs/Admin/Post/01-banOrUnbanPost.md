@@ -2,79 +2,54 @@
 sidebar_position: 1
 ---
 
-# Ban or Unban Post
+# Ban Or Unban Post
 
-### <span style={{color: 'darkorange'}}>POST</span> `/admin/:name/:posttitle`
+### <span style={{color: 'darkorange'}}>POST</span> `/admin/post/:postId`
 
-#### Description:
+#### Description
 
-This function allows you to ban or unban a post.
+Toggles a post's banned status.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'green'}}>true</span>
 
-### URL
+#### Requires Admin Role: <span style={{color: 'green'}}>true</span>
 
-| Name        | Type     | Description                     |
-| ----------- | -------- | ------------------------------- |
-| `name`      | `string` | The username that made the post |
-| `posttitle` | `string` | The post title (`DD-MM-YYYY`)   |
+#### PATH PARAMS
 
-## Usage Example
+| Name     | Type     | Required | Description |
+| -------- | -------- | -------- | ----------- |
+| `postId` | `string` | Yes      | MongoDB post ID. |
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
+#### BODY
 
-```javascript
-await axios.post("https://api.daykeeper.life/admin/JohnDoe/26-09-2024")
-```
+| Name     | Type     | Required | Description |
+| -------- | -------- | -------- | ----------- |
+| `reason` | `string` | No       | Ban or unban reason. |
 
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-- <strong>Note: An e-mail is going to be sent to the account</strong>
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-  "message": "JohnDoe's post from 25-08-2024 banned successfully"
+  "message": "johndoe's post from 2026-03-18T00:00:00.000Z banned successfully"
 }
 ```
 
-##### or
+or
 
-```javascript
-Status Code: 200
+```json
 {
-  "message": "JohnDoe's post from 25-08-2024 unbanned successfully"
+  "message": "johndoe's post from 2026-03-18T00:00:00.000Z unbanned successfully"
 }
 ```
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 409
-{
-  "message": "Invalid Login"
-}
-```
-
-#### Possible errors:
-
-| Code | Description   |
-| ---- | ------------- |
-| 409  | Invalid Login |
-| 500  | Server Error  |
+| Code | Description |
+| ---- | ----------- |
+| 401  | Missing or invalid access token |
+| 402  | User is not an admin |
+| 404  | Post not found |
+| 413  | Reason too long |
+| 500  | Server error |

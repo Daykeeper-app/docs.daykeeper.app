@@ -2,99 +2,64 @@
 sidebar_position: 5
 ---
 
-# Follow user
+# Follow/Unfollow User
 
-### <span style={{color: 'darkorange'}}>POST</span> `/:name/follow`
+### <span style={{color: 'darkorange'}}>POST</span> `/:username/follow`
 
-#### Description:
+#### Description
 
-This function allows you to follow or unfollow a user. If you are not following the user, you'll follow and, if you are following, you'll unfollow. If the user is private, you send a follow request, that the user can accept or deny. If the user is private and you already have sent a follow request, the follow request will be removed.
+Follows, unfollows, requests to follow, or withdraws a pending request depending on the current relationship and the target account privacy.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'green'}}>true</span>
 
-#### Body
+#### PATH PARAMS
 
-| Name   | Type     | Required | Description      |
-| ------ | -------- | -------- | ---------------- |
-| `name` | `string` | Yes      | The account name |
+| Name       | Type     | Required | Description |
+| ---------- | -------- | -------- | ----------- |
+| `username` | `string` | Yes      | Target username. |
 
 ## Usage Example
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
 ```javascript
-const response = await axios.post("https://daykeeper.life/JohnDoe/follow")
+await axios.post(
+  "https://api.daykeeper.app/johndoe/follow",
+  {},
+  {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  }
+)
 ```
 
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
+Possible messages include:
 
-#### Example:
-
-###### Follow:
-
-```javascript
-Status Code: 200
-{
-    "message": "You started following Luciano"
-}
+```json
+{ "message": "You started following johndoe" }
 ```
 
-###### Unfollow:
-
-```javascript
-Status Code: 200
-{
-    "message": "You unfollowed Luciano"
-}
+```json
+{ "message": "You unfollowed johndoe" }
 ```
 
-<strong>or, if the account is private</strong>
-
-##### Request Follow:
-
-```javascript
-Status Code: 200
-{
-    "message": "You sent a follow request to Luciano"
-}
+```json
+{ "message": "You sent a follow request to johndoe" }
 ```
 
-##### Remove follow request:
-
-```javascript
-Status Code: 200
-{
-    "message": "You have withdrawn your request to follow Luciano"
-}
+```json
+{ "message": "You have withdrawn your request to follow johndoe" }
 ```
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 404
-{
-    "message": "User not found"
-}
-```
-
-#### Possible errors:
-
-| Code | Description    |
-| ---- | -------------- |
+| Code | Description |
+| ---- | ----------- |
+| 401  | Missing or invalid access token |
+| 402  | One of the users is blocked or the target is banned |
 | 404  | User not found |
-| 409  | Invalid Login  |
-| 500  | Server Error   |
+| 400  | You cannot follow yourself |
+| 500  | Server error |

@@ -1,20 +1,40 @@
-/**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
- */
+:root {
+  --dk-sky: #74b9ff;
+  --dk-ink: #0f172a;
+  --dk-slate: #334155;
+  --dk-mist: #eaf2ff;
+  --dk-paper: #ffffff;
+  --dk-error: #b91c1c;
+  --dk-success: #15803d;
+  --ifm-color-primary: var(--dk-sky);
+  --ifm-color-primary-dark: #5baeff;
+  --ifm-color-primary-darker: #4fa9ff;
+  --ifm-color-primary-darkest: #2b96ff;
+  --ifm-color-primary-light: #8dc4ff;
+  --ifm-color-primary-lighter: #99c9ff;
+  --ifm-color-primary-lightest: #beddff;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(15, 23, 42, 0.1);
+}
 
 main {
   font-family: "Helvetica", "Arial", sans-serif;
 }
-:root {
-  --ifm-color-primary: #3e92cc;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
-}
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme="dark"] {
-  --ifm-color-primary: #3e92cc;
+  --dk-sky: #60a5fa;
+  --dk-ink: #e5e7eb;
+  --dk-slate: #9ca3af;
+  --dk-mist: #111827;
+  --dk-paper: #0b0f14;
+  --dk-error: #f87171;
+  --dk-success: #4ade80;
+  --ifm-color-primary: var(--dk-sky);
+  --ifm-color-primary-dark: #4894f9;
+  --ifm-color-primary-darker: #398cf8;
+  --ifm-color-primary-darkest: #0d73f6;
+  --ifm-color-primary-light: #78b6fb;
+  --ifm-color-primary-lighter: #87befb;
+  --ifm-color-primary-lightest: #aed5fd;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }

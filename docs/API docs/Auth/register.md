@@ -6,76 +6,70 @@ sidebar_position: 1
 
 ### <span style={{color: 'darkorange'}}>POST</span> `/auth/register`
 
-#### Description:
+#### Description
 
-This function allows you to register a new user in the database.
+Creates a new local DayKeeper account and sends an email verification code. The user is created with `verified_email: false` until the confirmation step is completed.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'darkred'}}>false</span>
 
-#### Body
+#### BODY
 
-| Name       | Type     | Required | Description                                                   |
-| ---------- | -------- | -------- | ------------------------------------------------------------- |
-| `name`     | `string` | Yes      | The new account username                                      |
-| `email`    | `string` | Yes      | The new account email                                         |
-| `password` | `string` | Yes      | The new account password                                      |
-| `timeZone` | `string` | No       | The new account IANA time zone (default: `America/Sao_Paulo`) |
+| Name       | Type     | Required | Description                                                        |
+| ---------- | -------- | -------- | ------------------------------------------------------------------ |
+| `username` | `string` | Yes      | Username for the new account. Lowercase letters, numbers, `.` and `_` only. |
+| `email`    | `string` | Yes      | Email address for the account.                                     |
+| `password` | `string` | Yes      | Password for local authentication.                                 |
+| `timeZone` | `string` | No       | IANA timezone. Defaults to the API default timezone.               |
 
-- You can change the default time zone at `./constants/index.js`
-- An email will be sent to the new account email's to confirm the registration with an code. If an account does not confirm the email in 24 hours, the account info will be deleted.
+### Validation Notes
+
+- `username`, `email`, and `password` are required.
+- Uppercase usernames are rejected.
+- Forbidden usernames such as reserved route names are rejected.
+- Duplicate email or username returns `409`.
+- Banned emails return `403`.
 
 ## Usage Example
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
 ```javascript
-await axios.post("https://api.daykeeper.life/auth/register", {
-  name: "JohnDoe",
+await axios.post("https://api.daykeeper.app/auth/register", {
+  username: "johndoe",
   email: "johndoe@example.com",
   password: "MyPassword1234",
-  timeZone: "America/Orlando",
+  timeZone: "America/New_York",
 })
 ```
 
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 201
+```json
 {
-  "message": "JohnDoe created successfully"
+  "message": "johndoe created successfully",
+  "user": {
+    "_id": "65cbaab84b9d1cce41e98b60",
+    "username": "johndoe",
+    "email": "johndoe@example.com",
+    "verified_email": false
+  }
 }
 ```
-
-#### After the user creation, <span style={{color: '#8B8000'}}>you need to confirm the email with a code sent to it!</span>
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
+| Code | Description |
+| ---- | ----------- |
+| 400  | Invalid input or missing required fields |
+| 403  | Banned email or forbidden username |
+| 409  | Username or email already registered |
+| 413  | Username or password too long |
+| 500  | Server error |
 
-#### Example:
+#### Example
 
-```javascript
-Status Code: 400
+```json
 {
-  "message": "Email is not valid"
+  "message": "This username or email has already been registered"
 }
 ```
-
-#### Possible errors:
-
-| Code | Description                        |
-| ---- | ---------------------------------- |
-| 400  | Invalid information                |
-| 413  | Information `{name}` not filled in |

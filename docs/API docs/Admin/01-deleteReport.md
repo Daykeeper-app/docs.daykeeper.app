@@ -1,69 +1,50 @@
 ---
-sidebar_position: 4
+sidebar_position: 1
 ---
 
 # Delete Report
 
-### <span style={{color: 'darkred'}}>DELETE</span> `admin/report/:reportId`
+### <span style={{color: 'darkred'}}>DELETE</span> `/admin/report/:reportId`
 
-#### Description:
+#### Description
 
-This function allows you to delete a report made on a post, storie or user.
+Deletes a report by its report ID.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'green'}}>true</span>
 
-#### URL
+#### Requires Admin Role: <span style={{color: 'green'}}>true</span>
 
-| Name       | Type       | Required | Description   |
-| ---------- | ---------- | -------- | ------------- |
-| `reportId` | `objectId` | Yes      | The report ID |
+#### PATH PARAMS
+
+| Name       | Type     | Required | Description |
+| ---------- | -------- | -------- | ----------- |
+| `reportId` | `string` | Yes      | MongoDB report ID. |
 
 ## Usage Example
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
 ```javascript
-const response = await axios.delete("https://daykeeper.life/admin/report/1234")
+await axios.delete("https://api.daykeeper.app/admin/report/66f1b247998df28960dbaa63", {
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+  },
+})
 ```
 
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-    "message": "Report deleted successfully"
+  "message": "Report deleted successfully"
 }
 ```
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 404
-{
-    "message": "Report not found"
-}
-```
-
-#### Possible errors:
-
-| Code | Description      |
-| ---- | ---------------- |
+| Code | Description |
+| ---- | ----------- |
+| 401  | Missing or invalid access token |
+| 402  | User is not an admin |
 | 404  | Report not found |
-| 409  | Invalid Login    |
-| 500  | Server Error     |
+| 500  | Server error |

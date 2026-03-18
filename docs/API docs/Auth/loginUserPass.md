@@ -6,95 +6,73 @@ sidebar_position: 3
 
 ### <span style={{color: 'darkorange'}}>POST</span> `/auth/login`
 
-#### Description:
+#### Description
 
-This function allows you to log-in into an account with an username ans a password.
+Logs in with a local account and returns an access token plus a refresh token.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'darkred'}}>false</span>
 
-#### Body
+#### BODY
 
-| Name       | Type     | Required | Description                   |
-| ---------- | -------- | -------- | ----------------------------- |
-| `name`     | `string` | Yes      | The account username or email |
-| `password` | `string` | Yes      | The account password          |
-
-- If you have not confirmet your email, a new verification code will be sent to the email so you can confirm it and the loign wont be finished.
+| Name       | Type     | Required | Description |
+| ---------- | -------- | -------- | ----------- |
+| `email`    | `string` | Yes      | Despite the field name, this can be either the user's email or username. |
+| `password` | `string` | Yes      | Account password. |
+| `deviceId` | `string` | No       | Optional device identifier stored with the refresh token. |
 
 ## Usage Example
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
 ```javascript
-await axios.post("https://api.daykeeper.life/auth/login", {
-  name: "JohnDoe",
-  password: "MyPassword1234",
+await axios.post("https://api.daykeeper.app/auth/login", {
+  email: "johndoe",
+  password: "MyPassword123",
+  deviceId: "web-chrome",
 })
 ```
 
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-| `user`    | `string` | The logged user data |
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-    "message": "user fetched successfully",
-    "user": {
-        "profile_picture": {
-            "name": "Doggo.jpg",
-            "key": "Doggo.jpg",
-            "url": "https://daykeeper.s3.amazonaws.com/Doggo.jpg"
-        },
-        "_id": "66c4ac9f1cfe0795199a733e",
-        "name": "JohnDoe",
-        "email": "johndoe@example.com",
-        "timeZone": "America/Orlando",
-        "bio": "",
-        "verified_email": true,
-        "private": false,
-        "roles": [
-            "user"
-        ],
-        "device_tokens": [],
-        "created_at": "2024-08-20T14:47:59.453Z",
-        "followers": [],
-        "follow_requests": [],
-        "blocked_users": [],
-        "__v": 0
-    }
+  "message": "johndoe logged successfully",
+  "user": {
+    "id": "65cbaab84b9d1cce41e98b60",
+    "username": "johndoe",
+    "email": "johndoe@example.com",
+    "profile_picture": {
+      "title": "DaykeeperPFP.png",
+      "key": "public/DaykeeperPFP.png",
+      "url": ""
+    },
+    "roles": ["user"]
+  },
+  "accessToken": "<jwt>",
+  "refreshToken": "<refresh_token>"
 }
 ```
 
-- See that thos response returns "confidential" informations too, like roles, device_tokens, etc...
+### Notes
+
+- If credentials are correct but the email is not verified, login is blocked and a new confirmation code is sent automatically.
+- Invalid credentials always return the same generic error message.
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
+| Code | Description |
+| ---- | ----------- |
+| 400  | Invalid input or missing fields |
+| 401  | Incorrect email/username or password |
+| 403  | Email not verified |
+| 413  | Email, username, or password too long |
+| 500  | Server error |
 
-#### Example:
+#### Example
 
-```javascript
-Status Code: 400
+```json
 {
-  "message": "Password is not valid"
+  "code": "EMAIL_NOT_VERIFIED",
+  "message": "Email not verified. A new confirmation code has been sent."
 }
 ```
-
-#### Possible errors:
-
-| Code | Description                        |
-| ---- | ---------------------------------- |
-| 400  | Invalid/Wrong information          |
-| 413  | Information `{name}` not filled in |

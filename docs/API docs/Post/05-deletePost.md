@@ -4,64 +4,45 @@ sidebar_position: 5
 
 # Delete Post
 
-### <span style={{color: 'darkred'}}>DELETE</span> `/:title`
+### <span style={{color: 'darkred'}}>DELETE</span> `/post/:postId`
 
-#### Description:
+#### Description
 
-This function allows you to completely delete one of your posts.
+Soft-deletes a post owned by the authenticated user and triggers cleanup for likes, comments, reports, and media links.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'green'}}>true</span>
 
-#### URL
+#### PATH PARAMS
 
-| Name    | Type     | Required | Description                 |
-| ------- | -------- | -------- | --------------------------- |
-| `title` | `string` | Yes      | The post title (dd-MM-yyyy) |
+| Name     | Type     | Required | Description |
+| -------- | -------- | -------- | ----------- |
+| `postId` | `string` | Yes      | MongoDB post ID. |
 
 ## Usage Example
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
 ```javascript
-const response = axios.delete("https://daykeeper.life/25-08-2024")
+await axios.delete("https://api.daykeeper.app/post/66ca560de464036ce909f08a", {
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+  },
+})
 ```
 
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-    "message": "Post deleted successfully"
+  "message": "Post deleted successfully"
 }
 ```
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 404
-{
-    "message": "Post not found"
-}
-```
-
-#### Possible errors:
-
-| Code | Description    |
-| ---- | -------------- |
-| 404  | Post not found |
+| Code | Description |
+| ---- | ----------- |
+| 401  | Missing or invalid access token |
+| 401  | Invalid post ID |
+| 404  | Post not found or not owned by the user |
+| 500  | Server error |

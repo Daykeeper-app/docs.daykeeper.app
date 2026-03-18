@@ -2,78 +2,55 @@
 sidebar_position: 1
 ---
 
-# Ban or Unban User
+# Ban Or Unban User
 
-### <span style={{color: 'darkorange'}}>POST</span> `/admin/:name`
+### <span style={{color: 'darkorange'}}>POST</span> `/admin/:username`
 
-#### Description:
+#### Description
 
-This function allows you to ban or unban an user.
+Toggles a user's banned status.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'green'}}>true</span>
 
-### URL
+#### Requires Admin Role: <span style={{color: 'green'}}>true</span>
 
-| Name   | Type     | Description               |
-| ------ | -------- | ------------------------- |
-| `name` | `string` | The username to be banned |
+#### PATH PARAMS
 
-## Usage Example
+| Name       | Type     | Required | Description |
+| ---------- | -------- | -------- | ----------- |
+| `username` | `string` | Yes      | Username of the target user. |
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
+#### BODY
 
-```javascript
-await axios.post("https://api.daykeeper.life/admin/JohnDoe")
-```
+| Name      | Type     | Required | Description |
+| --------- | -------- | -------- | ----------- |
+| `message` | `string` | No       | Ban or unban reason. |
 
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-- <strong>Note: An e-mail is going to be sent to the account</strong>
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-  "message": "JohnDoe banned successfully"
+  "message": "johndoe banned successfully"
 }
 ```
 
-##### or
+or
 
-```javascript
-Status Code: 200
+```json
 {
-  "message": "JohnDoe unbanned successfully"
+  "message": "johndoe unbanned successfully"
 }
 ```
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 409
-{
-  "message": "Invalid Login"
-}
-```
-
-#### Possible errors:
-
-| Code | Description   |
-| ---- | ------------- |
-| 409  | Invalid Login |
-| 500  | Server Error  |
+| Code | Description |
+| ---- | ----------- |
+| 401  | Missing or invalid access token |
+| 402  | User is not an admin |
+| 403  | Unauthorized action |
+| 404  | User not found |
+| 413  | Reason too long |
+| 500  | Server error |

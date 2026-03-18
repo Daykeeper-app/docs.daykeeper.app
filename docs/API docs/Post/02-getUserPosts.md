@@ -2,134 +2,62 @@
 sidebar_position: 2
 ---
 
-# Get User's Posts
+# Get User Posts
 
-### <span style={{color: 'green'}}>GET</span> `/:name/posts`
+### <span style={{color: 'green'}}>GET</span> `/:username/posts`
 
-#### Description:
+#### Description
 
-This function allows you to get all posts made by a user on pages.
+Returns a paginated list of posts for a specific user. This route lives under the user router, but it remains part of the post domain.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'green'}}>true</span>
 
-#### URL
+#### PATH PARAMS
 
-| Name   | Type     | Required | Description                       |
-| ------ | -------- | -------- | --------------------------------- |
-| `name` | `string` | Yes      | The account username, email or ID |
+| Name       | Type     | Required | Description |
+| ---------- | -------- | -------- | ----------- |
+| `username` | `string` | Yes      | Username or user ID. |
 
-#### Query Params
+#### QUERY PARAMS
 
-| Name   | Type     | Required | Description             |
-| ------ | -------- | -------- | ----------------------- |
-| `page` | `number` | No       | The page (default: `1`) |
+| Name          | Type     | Required | Description |
+| ------------- | -------- | -------- | ----------- |
+| `page`        | `number` | No       | Page number. Default is `1`. |
+| `maxPageSize` | `number` | No       | Page size. Maximum is `20`. |
+| `order`       | `string` | No       | `recent` or `relevant`. |
 
 ## Usage Example
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
 ```javascript
-await axios.get("https://api.daykeeper.life/JohnDoe/posts")
+await axios.get("https://api.daykeeper.app/johndoe/posts?page=1", {
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+  },
+})
 ```
 
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-| `user`    | `string` | The logged user data |
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-    "data": [
-        {
-            "_id": "66cbbea31e854f3d7995c1f0",
-            "title": "25-08-2024",
-            "data": "My first Post here",
-            "user": "66c4ac9f1cfe0795199a733e",
-            "created_at": "2024-08-25T23:30:43.463Z",
-            "files": [
-                {
-                    "name": "Screenshot 2024-08-22 at 9.03.09 AM.png",
-                    "key": "d76d775053d021f930ce1fe203f7bebd-Screenshot 2024-08-22 at 9.03.09 AM.png",
-                    "mimetype": "image/png",
-                    "url": "http://s3.amazonaws.com/daykeeper/d76d775053d021f930ce1fe203f7bebd-Screenshot%202024-08-22%20at%209.03.09%E2%80%AFAM.png",
-                    "_id": "66cbbea31e854f3d7995c1f1"
-                }
-            ],
-            "user_info": {
-                "_id": "66c4ac9f1cfe0795199a733e",
-                "name": "JohnDoe",
-                "email": "johndoe@example.com",
-                "profile_picture": {
-                    "name": "Doggo.jpg",
-                    "key": "Doggo.jpg",
-                    "url": "https://daykeeper.s3.amazonaws.com/Doggo.jpg"
-                },
-                "timeZone": "America/Sao_Paulo",
-                "bio": "That is my new Bio",
-                "private": false,
-                "roles": [
-                    "user"
-                ],
-                "created_at": "2024-08-20T14:47:59.453Z",
-                "followers": [
-                    "65cbaab84b9d1cce41e98b60",
-                    "65cd809dc6f6529359c790ed"
-                ],
-                "blocked_users": [],
-                "__v": 0,
-                "banned": "false"
-            },
-            "likes": 1,
-            "userLiked": true,
-            "comments": 1,
-            "userCommented": [
-                {
-                    "comment": "Comentario depois de organizar tudo",
-                    "gif": {
-                        "name": "Still Going Mixed Martial Arts GIF by UFC",
-                        "id": "EoVWPQErq3RPo6EZah",
-                        "url": "https://media4.giphy.com/media/EoVWPQErq3RPo6EZah/giphy.gif?cid=57a8262ewows1vqyqpdy18ijh2brp0v9kplaef1lsxi3ioys&ep=v1_gifs_gifId&rid=giphy.gif&ct=g"
-                    },
-                    "created_at": "2024-09-04T17:10:07.847Z"
-                }
-            ]
-        }
-    ],
-    "page": 1,
-    "pageSize": 1,
-    "maxPageSize": 1,
-    "totalPages": 3
+  "message": "user's posts fetched successfully",
+  "data": [],
+  "page": 1,
+  "pageSize": 0,
+  "maxPageSize": 20,
+  "totalPages": 0,
+  "totalCount": 0
 }
 ```
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 404
-{
-    "message": "User not found"
-}
-```
-
-#### Possible errors:
-
-| Code | Description    |
-| ---- | -------------- |
+| Code | Description |
+| ---- | ----------- |
+| 401  | Missing or invalid access token |
+| 402  | Blocked relationship |
 | 404  | User not found |
-| 409  | Invalid Login  |
-| 500  | Server Error   |
+| 409  | Private account route not accessible to viewer |
+| 500  | Server error |

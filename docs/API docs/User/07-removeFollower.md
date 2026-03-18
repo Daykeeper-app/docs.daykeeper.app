@@ -6,66 +6,44 @@ sidebar_position: 7
 
 ### <span style={{color: 'darkred'}}>DELETE</span> `/:name/follower`
 
-#### Description:
+#### Description
 
-This function allows you to make a user stop following you. <strong>Just work if your account is private.</strong>
+Removes a follower from the authenticated account. This route only works when the authenticated account is private.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'green'}}>true</span>
 
-#### Body
+#### PATH PARAMS
 
-| Name   | Type     | Required | Description      |
-| ------ | -------- | -------- | ---------------- |
-| `name` | `string` | Yes      | The account name |
+| Name   | Type     | Required | Description |
+| ------ | -------- | -------- | ----------- |
+| `name` | `string` | Yes      | Username of the follower to remove. |
 
 ## Usage Example
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
 ```javascript
-const response = await axios.delete("https://daykeeper.life/Luciano/follower")
+await axios.delete("https://api.daykeeper.app/johndoe/follower", {
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+  },
+})
 ```
 
 ### Success Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-    "message": "Luciano's follow removed successfully"
+  "message": "johndoe's follow removed successfully"
 }
 ```
 
 ### Error Response
 
-| Name      | Type     | Description                                                 |
-| --------- | -------- | ----------------------------------------------------------- |
-| `Status`  | `code`   | Response Status Code                                        |
-| `Message` | `string` | Descriptive message                                         |
-| `Reason`  | `string` | Reason why you were unauthorized (if you were unauthorized) |
-
-#### Example:
-
-```javascript
-Status Code: 409
-{
-    "message": "You don't have authorization to 'remove follower'",
-    "reason": "Only private accounts can remove followers"
-}
-```
-
-#### Possible errors:
-
-| Code | Description                   |
-| ---- | ----------------------------- |
-| 404  | User not found                |
-| 409  | Unauthorized OR Invalid Login |
-| 500  | Server Error                  |
+| Code | Description |
+| ---- | ----------- |
+| 401  | Missing or invalid access token |
+| 402  | Target user is banned |
+| 403  | Account is not private |
+| 404  | User not found or does not follow you |
+| 500  | Server error |

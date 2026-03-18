@@ -4,84 +4,97 @@ sidebar_position: 1
 
 # How to Read
 
-All the pages will follow this format, all data here is just an example:
+The DayKeeper API docs use the same structure on most endpoint pages so you can scan them quickly.
+
+## Page structure
+
+Each endpoint page usually contains:
+
+1. The HTTP method and route.
+2. A short description of what the endpoint does.
+3. Authentication requirements.
+4. Path, query, or body parameters.
+5. A request example.
+6. A success response example.
+7. Common error responses.
+
+## Example format
 
 # Title
 
 ### METHOD `/endpoint`
 
-#### Description:
+#### Description
 
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+Short explanation of the endpoint behavior.
 
-### Request Parameters (example)
+### Request Parameters
 
-#### Body (example)
+#### Requires Authentication: `true` or `false`
 
-| Name       | Type     | Required | Description                                             |
-| ---------- | -------- | -------- | ------------------------------------------------------- |
-| `name`     | `string` | Yes      | The user's full name                                    |
-| `email`    | `string` | Yes      | A valid email address for the user                      |
-| `password` | `string` | Yes      | A password for authentication (minimum of 8 characters) |
+#### BODY
 
-#### Authentication (example)
+| Name       | Type     | Required | Description |
+| ---------- | -------- | -------- | ----------- |
+| `name`     | `string` | Yes      | Example field |
+| `email`    | `string` | Yes      | Example field |
+| `password` | `string` | Yes      | Example field |
 
-| Name     | Type     | Required | Description                             |
-| -------- | -------- | -------- | --------------------------------------- |
-| `Cookie` | `string` | Yes      | Automaticaly created Cookie when log-in |
+#### QUERY PARAMS
 
-## Usage Example:
+| Name   | Type     | Required | Description |
+| ------ | -------- | -------- | ----------- |
+| `page` | `number` | No       | Example field |
+| `q`    | `string` | No       | Example field |
 
-#### JavaScript with axios:
+## Authentication
 
-```javascript
-await axios.post("/endpoint", { name: "", email: "", password: "" })
+Most protected endpoints expect a bearer token:
+
+```http
+Authorization: Bearer <access_token>
 ```
 
-### Success Response:
+If the token is missing, invalid, or expired, the API usually returns `401`.
 
-| Name      | Type     | Description                                                   |
-| --------- | -------- | ------------------------------------------------------------- |
-| `Status`  | `string` | Operation status (success)                                    |
-| `Message` | `string` | Descriptive message (User registered successfully.)           |
-| `Data`    | `object` | Data for the created user, including the authentication token |
+## Request examples
 
-#### Example:
+Examples use `axios`, but any HTTP client works.
 
 ```javascript
-{
-  "status": "success",
-  "message": "User registered successfully.",
-  "data": {
-    "user": {
-      "id": "64b8f8f1a4f0e629d4b8b8f1",
-      "name": "John Doe",
-      "email": "john.doe@example.com"
-    }
+await axios.post(
+  "https://api.daykeeper.app/endpoint",
+  { name: "John", email: "john@example.com", password: "secret123" },
+  {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   }
-}
+)
 ```
 
-### Error Response:
+## Response examples
 
-| Name      | Type     | Description                                         |
-| --------- | -------- | --------------------------------------------------- |
-| `Status`  | `string` | Operation status (success)                          |
-| `Message` | `string` | Descriptive message (User registered successfully.) |
+Examples are representative. Real payloads may include more fields depending on the endpoint and the current API version.
 
-#### Example:
+### Success response
 
 ```json
 {
-  "status": "error",
-  "message": "User not found."
+  "message": "Operation completed successfully"
 }
 ```
 
-#### Possible errors:
+### Error response
 
-| Code | Description  |
-| ---- | ------------ |
-| 400  | Bad Request  |
-| 404  | Not Found    |
-| 409  | Unauthorized |
+```json
+{
+  "message": "Invalid or expired access token"
+}
+```
+
+## Notes
+
+- Pagination responses usually include `page`, `pageSize`, `maxPageSize`, `totalPages`, and `totalCount`.
+- Dates in the existing API are commonly represented as `DD-MM-YYYY` in route params and as ISO timestamps in response payloads.
+- Some older docs may still use legacy examples. Prefer the parameter tables and endpoint descriptions when something looks inconsistent.

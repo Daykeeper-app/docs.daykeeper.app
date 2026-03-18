@@ -3,6 +3,6 @@
   "position": 5,
   "link": {
     "type": "generated-index",
-    "description": "Endpoints about Authentication."
+    "description": "Endpoints related to User Authentication."
   }
 }

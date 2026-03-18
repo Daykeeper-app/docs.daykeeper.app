@@ -1,8 +1,0 @@
-{
-  "label": "Daily Questions",
-  "position": 3,
-  "link": {
-    "type": "generated-index",
-    "description": "Endpoints about Daily Questions."
-  }
-}

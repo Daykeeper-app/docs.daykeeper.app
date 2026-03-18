@@ -43,17 +43,27 @@ const config: Config = {
           type: "docSidebar",
           sidebarId: "tutorialSidebar",
           position: "left",
-          label: "Tutorial",
+          label: "API Docs",
         },
         {
-          href: "https://daykeeper-about.netlify.app",
-          label: "About Us",
+          href: "https://daykeeper.app",
+          label: "Try App",
           position: "left",
         },
         {
-          href: "https://github.com/luciano655dev",
+          href: "https://about.daykeeper.app",
+          label: "About",
+          position: "left",
+        },
+        {
+          href: "https://about.daykeeper.app/status",
+          label: "Status",
+          position: "right",
+        },
+        {
+          href: "https://github.com/luciano655dev/daykeeper.app",
           label: "GitHub",
-          position: "left",
+          position: "right",
         },
       ],
     },
@@ -61,53 +71,65 @@ const config: Config = {
       style: "dark",
       links: [
         {
-          title: "Repositories",
+          title: "DayKeeper",
           items: [
             {
-              label: "DayKeeper API",
-              to: "https://github.com/luciano655dev/daykeeper-api",
+              label: "About",
+              href: "https://about.daykeeper.app",
             },
             {
-              label: "DayKeeper APP",
-              to: "https://github.com/luciano655dev/daykeeper-app",
+              label: "Status",
+              href: "https://about.daykeeper.app/status",
             },
             {
-              label: "DayKeeper Website",
-              to: "https://github.com/luciano655dev/daykeeper-website",
+              label: "Terms",
+              href: "https://about.daykeeper.app/terms",
             },
             {
-              label: "DayKeeper About",
-              to: "https://github.com/luciano655dev/daykeeper-about",
+              label: "Privacy",
+              href: "https://about.daykeeper.app",
             },
             {
-              label: "DayKeeper Docs",
-              to: "https://github.com/luciano655dev/daykeeper-docs",
+              label: "License",
+              href: "https://about.daykeeper.app",
             },
           ],
         },
         {
-          title: "Social Medias",
+          title: "Community",
           items: [
             {
-              label: "Twitter",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
+              label: "API Docs",
+              href: "https://docs.daykeeper.app",
             },
             {
               label: "Instagram",
-              href: "https://discordapp.com/invite/docusaurus",
+              href: "https://instagram.com/daykeeperapp",
             },
             {
-              label: "Gmail",
-              href: "https://twitter.com/docusaurus",
+              label: "Contact",
+              href: "mailto:contact@daykeeper.app",
             },
           ],
         },
         {
-          title: "About Me",
+          title: "Repositories",
           items: [
             {
-              label: "Portfolio",
-              to: "https://luciano655.netlify.app",
+              label: "API Repo",
+              href: "https://github.com/luciano655dev/api.daykeeper.app",
+            },
+            {
+              label: "App Repo",
+              href: "https://github.com/luciano655dev/daykeeper.app",
+            },
+            {
+              label: "About Repo",
+              href: "https://github.com/luciano655dev/about.daykeeper.app",
+            },
+            {
+              label: "Docs Repo",
+              href: "https://github.com/luciano655dev/docs.daykeeper.app",
             },
           ],
         },

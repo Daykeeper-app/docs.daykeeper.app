@@ -1,0 +1,8 @@
+{
+  "label": "Comments",
+  "position": 9,
+  "link": {
+    "type": "generated-index",
+    "description": "Comment, reply, and comment-like endpoints for posts."
+  }
+}

@@ -6,75 +6,60 @@ sidebar_position: 4
 
 ### <span style={{color: 'darkred'}}>DELETE</span> `/user`
 
-#### Description:
+#### Description
 
-This feature allows you to completely delete your account and interactions made through it.
+Soft-deletes the authenticated user's account and clears related data. This route requires both the account password and the delete code requested through the auth flow.
 
 ### Request Parameters
 
 #### Requires Authentication: <span style={{color: 'green'}}>true</span>
 
+#### BODY
+
+| Name       | Type     | Required | Description |
+| ---------- | -------- | -------- | ----------- |
+| `password` | `string` | Yes      | Current account password. |
+| `code`     | `string` | Yes      | Delete-account verification code sent by email. |
+
 ## Usage Example
 
-#### JavaScript with <a href="https://axios-http.com/docs/intro">axios</a>:
-
 ```javascript
-const response = axios.delete("https://daykeeper.life/user")
+await axios.delete("https://api.daykeeper.app/user", {
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+  },
+  data: {
+    password: "MyPassword123",
+    code: "123456",
+  },
+})
 ```
 
 ### Success Response
 
-| Name            | Type     | Description                                                      |
-| --------------- | -------- | ---------------------------------------------------------------- |
-| `Status`        | `code`   | Response Status Code                                             |
-| `message`       | `string` | Descriptive message                                              |
-| `user`          | `number` | The quantity od deleted user                                     |
-| `posts`         | `number` | The quantity of deleted posts                                    |
-| `post_likes`    | `number` | The quantity of likes the account made                           |
-| `post_comments` | `number` | The quantity of comments the account made                        |
-| `comment_likes` | `number` | The quantity of likes in comments that the account made          |
-| `followers`     | `number` | The quantity of followers and following the account had          |
-| `stories`       | `number` | The quantity of deleted stories                                  |
-| `storie_views`  | `number` | The quantity of views in stories that the usar made and received |
-| `storie_likes`  | `number` | The quantity of likes in stories that the user made and received |
-
-#### Example:
-
-```javascript
-Status Code: 200
+```json
 {
-    "message": "User deleted successfully",
-    "user": 1,
-    "posts": 3,
-    "post_likes": 5,
-    "post_comments": 4,
-    "comment_likes": 6,
-    "followers": 3,
-    "stories": 2,
-    "storie_views": 6,
-    "storie_likes": 4
+  "message": "User deleted successfully",
+  "user": {
+    "_id": "65cbaab84b9d1cce41e98b60",
+    "status": "deleted"
+  },
+  "posts_likes": 2,
+  "comments": 4,
+  "comments_likes": 1,
+  "followers": 3,
+  "posts": 5,
+  "reports": 0,
+  "ban_history": 0
 }
 ```
 
 ### Error Response
 
-| Name      | Type     | Description          |
-| --------- | -------- | -------------------- |
-| `Status`  | `code`   | Response Status Code |
-| `Message` | `string` | Descriptive message  |
-
-#### Example:
-
-```javascript
-Status Code: 409
-{
-    "message": "Invalid Login"
-}
-```
-
-#### Possible errors:
-
-| Code | Description   |
-| ---- | ------------- |
-| 409  | Invalid Login |
-| 500  | Server Error  |
+| Code | Description |
+| ---- | ----------- |
+| 400  | Password or code missing |
+| 401  | Invalid password or verification code |
+| 403  | Password-based deletion not allowed for this account |
+| 404  | User not found |
+| 500  | Server error |

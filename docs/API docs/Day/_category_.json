@@ -1,0 +1,8 @@
+{
+  "label": "Day",
+  "position": 8,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints for day events and day tasks."
+  }
+}
